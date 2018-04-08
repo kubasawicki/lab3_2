@@ -51,4 +51,40 @@ public class NewsLoaderTest {
         }
     }
     
+    @SuppressWarnings("unchecked")
+    @Test
+    public void loadingNewsWithTwoNoneInformationsShouldStoreAllInPublicContent() {
+        IncomingInfo info = new IncomingInfo("1", SubsciptionType.NONE);
+        IncomingInfo info2 = new IncomingInfo("2", SubsciptionType.NONE);
+        IncomingNews news = new IncomingNews();
+        news.add(info);
+        news.add(info2);
+        when(reader.read()).thenReturn(news);
+        try {
+            List<String> content = (List<String>) field.get(newsLoader.loadNews());
+            assertThat(content.size(), is(2));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Test
+    public void loadingNewsWithOneNoneAndTwoDifferentInformationsShouldStoreOneInPublicContent() {
+        IncomingInfo info = new IncomingInfo("1", SubsciptionType.B);
+        IncomingInfo info2 = new IncomingInfo("2", SubsciptionType.NONE);
+        IncomingInfo info3 = new IncomingInfo("2", SubsciptionType.A);
+        IncomingNews news = new IncomingNews();
+        news.add(info);
+        news.add(info2);
+        news.add(info3);
+        when(reader.read()).thenReturn(news);
+        try {
+            List<String> content = (List<String>) field.get(newsLoader.loadNews());
+            assertThat(content.size(), is(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 }
