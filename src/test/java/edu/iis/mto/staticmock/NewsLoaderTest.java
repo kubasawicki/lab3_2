@@ -107,4 +107,53 @@ public class NewsLoaderTest {
         List<String> content = (List<String>) field.get( newsLoader.loadNews() );
         assertThat( content.size(), is( 0 ) );
     }
+    @Test
+    public void testShouldReturnOneNewsForSubs() throws IllegalAccessException, NoSuchFieldException {
+        IncomingInfo incomingInfo = new IncomingInfo( "Info1", SubsciptionType.A );
+        IncomingNews incomingNews = new IncomingNews();
+        incomingNews.add( incomingInfo );
+        when( newsReader.read() ).thenReturn( incomingNews );
+        field = PublishableNews.class.getDeclaredField( "subscribentContent" );
+        field.setAccessible( true );
+        List<String> content = (List<String>) field.get( newsLoader.loadNews() );
+        assertThat( content.size(), is( 1 ) );
+    }
+
+    @Test
+    public void testShouldReturnTwoNewsForSubs() throws IllegalAccessException, NoSuchFieldException {
+        IncomingInfo incomingInfo1 = new IncomingInfo( "Info1", SubsciptionType.A );
+        IncomingInfo incomingInfo2 = new IncomingInfo( "Info2", SubsciptionType.NONE );
+        IncomingInfo incomingInfo3 = new IncomingInfo( "Info3", SubsciptionType.C );
+        IncomingNews incomingNews = new IncomingNews();
+        incomingNews.add( incomingInfo1 );
+        incomingNews.add( incomingInfo2 );
+        incomingNews.add( incomingInfo3 );
+        when( newsReader.read() ).thenReturn( incomingNews );
+        field = PublishableNews.class.getDeclaredField( "subscribentContent" );
+        field.setAccessible( true );
+        List<String> content = (List<String>) field.get( newsLoader.loadNews() );
+        assertThat( content.size(), is( 2 ) );
+    }
+
+    @Test
+    public void testEmptyIncomingNewsShouldReturnZeroNewsForSubs() throws IllegalAccessException, NoSuchFieldException {
+        IncomingNews incomingNews = new IncomingNews();
+        when( newsReader.read() ).thenReturn( incomingNews );
+        field = PublishableNews.class.getDeclaredField( "subscribentContent" );
+        field.setAccessible( true );
+        List<String> content = (List<String>) field.get( newsLoader.loadNews() );
+        assertThat( content.size(), is( 0 ) );
+    }
+
+    @Test
+    public void testNotEmptyShouldReturnZeroNewsForSubs() throws IllegalAccessException, NoSuchFieldException {
+        IncomingInfo incomingInfo1 = new IncomingInfo( "Info3", SubsciptionType.NONE );
+        IncomingNews incomingNews = new IncomingNews();
+        incomingNews.add( incomingInfo1 );
+        when( newsReader.read() ).thenReturn( incomingNews );
+        field = PublishableNews.class.getDeclaredField( "subscribentContent" );
+        field.setAccessible( true );
+        List<String> content = (List<String>) field.get( newsLoader.loadNews() );
+        assertThat( content.size(), is( 0 ) );
+    }
 }
