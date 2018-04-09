@@ -57,8 +57,7 @@ public class NewsLoaderTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    
+    }   
     @SuppressWarnings("unchecked")
 	@Test
     public void incomingNewsWithNoneSubscriptionShouldBeKeptInPublicContent() {
@@ -73,7 +72,6 @@ public class NewsLoaderTest {
             e.printStackTrace();
         }
     }
-    
     @SuppressWarnings("unchecked")
     @Test
     public void onlyInformationWithoutSubscriptionShouldBeKeptInPublicContent() {
