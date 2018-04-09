@@ -66,4 +66,45 @@ public class NewsLoaderTest {
         List<String> content = (List<String>) field.get( newsLoader.loadNews() );
         assertThat( content.size(), is( 1 ) );
     }
+    @Test
+    public void testShouldReturnTwoNewsForPublic() throws IllegalAccessException, NoSuchFieldException {
+        IncomingInfo incomingInfo1 = new IncomingInfo( "Info1", SubsciptionType.A );
+        IncomingInfo incomingInfo2 = new IncomingInfo( "Info1", SubsciptionType.NONE );
+        IncomingInfo incomingInfo3 = new IncomingInfo( "Info1", SubsciptionType.NONE );
+        IncomingNews incomingNews = new IncomingNews();
+        incomingNews.add( incomingInfo1 );
+        incomingNews.add( incomingInfo2 );
+        incomingNews.add( incomingInfo3 );
+        when( newsReader.read() ).thenReturn( incomingNews );
+        field = PublishableNews.class.getDeclaredField( "publicContent" );
+        field.setAccessible( true );
+        List<String> content = (List<String>) field.get( newsLoader.loadNews() );
+        assertThat( content.size(), is( 2 ) );
+    }
+
+    @Test
+    public void testEmptyIncomingNewsShouldReturnZeroNewsForPublic() throws IllegalAccessException, NoSuchFieldException {
+        IncomingNews incomingNews = new IncomingNews();
+        when( newsReader.read() ).thenReturn( incomingNews );
+        field = PublishableNews.class.getDeclaredField( "publicContent" );
+        field.setAccessible( true );
+        List<String> content = (List<String>) field.get( newsLoader.loadNews() );
+        assertThat( content.size(), is( 0 ) );
+    }
+
+    @Test
+    public void testNotEmptyShouldReturnZeroNewsForPublic() throws IllegalAccessException, NoSuchFieldException {
+        IncomingInfo incomingInfo1 = new IncomingInfo( "Info1", SubsciptionType.A );
+        IncomingInfo incomingInfo2 = new IncomingInfo( "Info1", SubsciptionType.B );
+        IncomingInfo incomingInfo3 = new IncomingInfo( "Info1", SubsciptionType.C );
+        IncomingNews incomingNews = new IncomingNews();
+        incomingNews.add( incomingInfo1 );
+        incomingNews.add( incomingInfo2 );
+        incomingNews.add( incomingInfo3 );
+        when( newsReader.read() ).thenReturn( incomingNews );
+        field = PublishableNews.class.getDeclaredField( "publicContent" );
+        field.setAccessible( true );
+        List<String> content = (List<String>) field.get( newsLoader.loadNews() );
+        assertThat( content.size(), is( 0 ) );
+    }
 }
