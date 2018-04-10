@@ -16,10 +16,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.verifyNew;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 
 @RunWith(PowerMockRunner.class)
@@ -146,7 +143,7 @@ public class NewsLoaderTest {
     }
 
     @Test
-    public void testNotEmptyShouldReturnZeroNewsForSubs() throws IllegalAccessException, NoSuchFieldException {
+    public void testNotEmptyIncomingInfoShouldReturnZeroNewsForSubs() throws IllegalAccessException, NoSuchFieldException {
         IncomingInfo incomingInfo1 = new IncomingInfo( "Info3", SubsciptionType.NONE );
         IncomingNews incomingNews = new IncomingNews();
         incomingNews.add( incomingInfo1 );
@@ -155,5 +152,16 @@ public class NewsLoaderTest {
         field.setAccessible( true );
         List<String> content = (List<String>) field.get( newsLoader.loadNews() );
         assertThat( content.size(), is( 0 ) );
+    }
+    @Test
+    public void newsReaderWithManyIncomingInfoShouldCallOneTimeReadMethodOnLoadNews() throws IllegalAccessException, NoSuchFieldException {
+        IncomingInfo incomingInfo1 = new IncomingInfo( "Info1", SubsciptionType.NONE );
+        IncomingInfo incomingInfo2 = new IncomingInfo( "Info2", SubsciptionType.NONE );
+        IncomingNews incomingNews = new IncomingNews();
+        incomingNews.add( incomingInfo1 );
+        incomingNews.add( incomingInfo2 );
+        when( newsReader.read() ).thenReturn( incomingNews );
+        newsLoader.loadNews();
+        verify( newsReader , times( 1 ) ).read();
     }
 }
