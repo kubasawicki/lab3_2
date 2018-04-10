@@ -16,6 +16,8 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -89,5 +91,11 @@ public class NewsLoaderTest {
         }catch(Exception e){
             System.out.println("Casting to List exception");
         }
+    }
+
+    @Test
+    public void readMethodShouldBeCalledOnlyOnceInLoadNewsMethod(){
+        newsLoader.loadNews();
+        verify(reader, times(1)).read();
     }
 }
