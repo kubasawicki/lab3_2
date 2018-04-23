@@ -35,37 +35,56 @@ public class NewsLoaderTests {
 	private ConfigurationLoader configLoader;
 	private NewsLoader newsLoader;
 	private NewsReader newsReader;
-	private String readerType;
 	private IncomingInfo AInfo; 
 	private IncomingInfo BInfo;
 	private IncomingInfo CInfo;
 	private IncomingInfo publicInfo; 
 	private IncomingNews incomingNews;
 	private PublishableNews publishableNews;
+	private String readerType;
 	
 	@Before
 	public void setUp() {
 		
 		newsLoader = new NewsLoader();
-		readerType = "ReaderType";
 		AInfo = new IncomingInfo("A", SubsciptionType.A);
 		BInfo = new IncomingInfo("B", SubsciptionType.B);
 		CInfo = new IncomingInfo("C", SubsciptionType.C);
-		publicInfo = new IncomingInfo("Public", SubsciptionType.NONE);
+		publicInfo = new IncomingInfo("Public", SubsciptionType.NONE);		
+		publishableNews = new PublishableNews();
+		readerType = new String("ReaderType");
+		
+		mockStatic(ConfigurationLoader.class);
+		ConfigurationLoader mockConfigurationLoader = mock(ConfigurationLoader.class);
+		when(ConfigurationLoader.getInstance()).thenReturn(mockConfigurationLoader);
+		Configuration configuration = new Configuration();
+		Whitebox.setInternalState(configuration, "readerType", readerType);
+		when(mockConfigurationLoader.loadConfiguration()).thenReturn(configuration);
+		
 		incomingNews = new IncomingNews();	
+		incomingNews.add(AInfo);
+		incomingNews.add(BInfo);
+		incomingNews.add(CInfo);
+		incomingNews.add(publicInfo);
 		
-		configLoader = PowerMockito.mock(ConfigurationLoader.class);
-		when(configLoader.loadConfiguration()).thenReturn(new Configuration());
-		
-		newsReader = PowerMockito.mock(FileNewsReader.class);
-		when(newsReader.read()).thenReturn(incomingNews);
+		NewsReader newsReader = new NewsReader() {
+			
+			@Override
+			public IncomingNews read() {
+				return incomingNews;				
+			}
+		};
 		
 		mockStatic(NewsReaderFactory.class);
-		when(NewsReaderFactory.getReader(Mockito.anyString())).thenReturn(newsReader);			
-		
-		mockStatic(NewsReaderFactory.class);		
 		when(NewsReaderFactory.getReader(readerType)).thenReturn(newsReader);
 		
-		newsLoader = new NewsLoader();
+	}
+	
+	@Test
+	public void publicNewsTest() {
+		
+		publishableNews = newsLoader.loadNews();
+		List<String> result = (List<String>) Whitebox.getInternalState(publishableNews, "publicContent");
+		Assert.assertThat(result.size(), is(1));
 	}
 }
