@@ -1,4 +1,4 @@
-package lab3_2;
+package edu.iis.mto.staticmock;
 
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -70,8 +70,7 @@ public class NewsLoaderTests {
         incomingNews.add(AInfo);	
         incomingNews.add(BInfo);
         incomingNews.add(CInfo);
-        incomingNews.add(publicInfo);
-		
+        incomingNews.add(publicInfo);    
 	}
 	
 	@Test
@@ -82,7 +81,7 @@ public class NewsLoaderTests {
     }
 	
 	@Test
-	public void publicNewsTest() {
+	public void incomingNewsShouldContainCorrectNumberOfPublicNews() {
 
 		try {
 			field = PublishableNews.class.getDeclaredField("publicContent");
@@ -94,5 +93,10 @@ public class NewsLoaderTests {
         }		
 	}
 	
-	
+	@Test
+	public void behaviorTest() {
+		newsLoader.loadNews();
+		Mockito.verify(configLoader, Mockito.times(1)).loadConfiguration();
+		Mockito.verify(newsReader, Mockito.times(1)).read();
+	}	
 }
