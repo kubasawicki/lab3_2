@@ -14,12 +14,12 @@ public class PublishableNews {
 
 	public void addPublicInfo(String content) {
 		this.publicContent .add(content);
-		
+
 	}
 
 	public void addForSubscription(String content, SubsciptionType subscriptionType) {
 		// TODO Auto-generated method stub
-		
+		this.subscribentContent.add( content );
 	}
 
 }
