@@ -27,7 +27,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * @author 204641
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ConfigurationLoader.class, NewsReaderFactory.class})
+@PrepareForTest({ConfigurationLoader.class, NewsReaderFactory.class, PublishableNews.class})
 public class NewsLoaderTest {
     
     IncomingNews incomingNews = new IncomingNews();
@@ -55,23 +55,29 @@ public class NewsLoaderTest {
         mockStatic(NewsReaderFactory.class);
         when(NewsReaderFactory.getReader((String) Mockito.any())).thenReturn(newsReaderMock);
         newsLoader = new NewsLoader();
-                
-        mockStatic(PublishableNews.class);
-        publishableNewsMock = mock(PublishableNews.class);
-        
+                                               
         incomingNews.add(new IncomingInfo("a", A));
         incomingNews.add(new IncomingInfo("none", NONE));
-        publishableNews = newsLoader.loadNews();
         newsList = new ArrayList<>();
     }
     
     @Test
     public void testLoadNewsAddingIncomingInfoWhichIsNoneGetsAddedToPublicInfo(){
-        
+        publishableNews = newsLoader.loadNews();
         newsContent = publishableNews.getPublicContent();
         newsList.add("none");
         assertThat(newsContent, is(newsList));
 
+    }
+    
+    @Test
+    public void testLoadNewsSubscriptionTypeCallsAddForSuscription(){
+        mockStatic(PublishableNews.class);
+        publishableNewsMock = mock(PublishableNews.class);
+        when(PublishableNews.create()).thenReturn(publishableNewsMock);
+        publishableNews = newsLoader.loadNews();
+
+        verify(publishableNewsMock, times(1)).addForSubscription("a", A);
     }
     
     /**
