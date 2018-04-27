@@ -62,4 +62,17 @@ public class NewsLoaderTest {
         verify(configurationLoaderMock, times(1)).loadConfiguration();
     }
 
+    @Test
+    public void loadNewsShouldPublishPublicNews() {
+        PublishableNews publishableNews = newsLoader.loadNews();
+
+        assert(publishableNews.getPublicContent().contains("Public Test"));
+    }
+
+    @Test
+    public void loadNewsShouldNotPublishSubscriptionNews() {
+        PublishableNews publishableNews = newsLoader.loadNews();
+
+        assert(!publishableNews.getPublicContent().contains("Sub Test"));
+    }
 }
