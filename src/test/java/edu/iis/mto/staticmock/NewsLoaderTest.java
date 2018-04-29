@@ -33,9 +33,9 @@ public class NewsLoaderTest {
         IncomingNews incomingNews = new IncomingNews();
 
         IncomingInfo incomingPublicInfo = new IncomingInfo("Public Test", SubsciptionType.NONE);
-        IncomingInfo incomingSubcriptionAInfo = new IncomingInfo("Sub Test", SubsciptionType.A);
+        IncomingInfo incomingSubscriptionAInfo = new IncomingInfo("Sub Test", SubsciptionType.A);
         incomingNews.add(incomingPublicInfo);
-        incomingNews.add(incomingSubcriptionAInfo);
+        incomingNews.add(incomingSubscriptionAInfo);
 
         mockStatic(ConfigurationLoader.class);
         configurationLoaderMock = mock(ConfigurationLoader.class);
@@ -48,6 +48,7 @@ public class NewsLoaderTest {
         mockStatic(NewsReaderFactory.class);
         newsReaderFactoryMock = mock(NewsReaderFactory.class);
         when(getReader(null)).thenReturn(newsReaderMock);
+        // anyString() doesn't work, I suspect problem with nulls tbh, but it looks hacky :(
     }
 
     @Test
