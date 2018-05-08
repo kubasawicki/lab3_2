@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.times;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -86,5 +87,14 @@ public class NewsLoaderTests {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void loadNewsMethodShouldLoadConfigurationOnce() {
+        incomingNews = new IncomingNews();
+        when(newsReader.read()).thenReturn(incomingNews);
+
+        newsLoader.loadNews();
+        Mockito.verify(configurationLoader, times(1)).loadConfiguration();
     }
 }
