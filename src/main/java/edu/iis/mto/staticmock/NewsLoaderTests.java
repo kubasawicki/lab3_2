@@ -1,6 +1,6 @@
 package edu.iis.mto.staticmock;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -68,4 +68,22 @@ public class NewsLoaderTests {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Test
+    public void loadingNewsWithOneNoneAndTwoDifferentInformationsShouldStoreOneInPublicContent() {
+        IncomingInfo info = new IncomingInfo("1", SubsciptionType.B);
+        IncomingInfo info2 = new IncomingInfo("2", SubsciptionType.NONE);
+        IncomingInfo info3 = new IncomingInfo("2", SubsciptionType.A);
+        IncomingNews news = new IncomingNews();
+        news.add(info);
+        news.add(info2);
+        news.add(info3);
+        when(reader.read()).thenReturn(news);
+        try {
+            List<String> content = (List<String>) field.get(newsLoader.loadNews());
+            assertThat(content.size(), is(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
