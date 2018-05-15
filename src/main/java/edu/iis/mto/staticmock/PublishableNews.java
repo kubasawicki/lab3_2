@@ -12,6 +12,14 @@ public class PublishableNews {
 	private final List<String> publicContent = new ArrayList<>();
 	private final List<String> subscribentContent = new ArrayList<>();
 
+	public List<String> getPublicContent() {
+		return publicContent;
+	}
+
+	public List<String> getSubscribentContent() {
+		return subscribentContent;
+	}
+
 	public void addPublicInfo(String content) {
 		this.publicContent .add(content);
 		
