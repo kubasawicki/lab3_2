@@ -29,9 +29,13 @@ public class NewsLoaderTests {
     private NewsLoader newsLoader;
     private Field field;
 
+    public NewsLoader getNewsLoader() {
+        return newsLoader;
+    }
+
     @SuppressWarnings("static-access")
     @Before
-    public void setUp() {
+    public void setUp() throws NoSuchFieldException, SecurityException {
         PowerMockito.mockStatic(NewsReaderFactory.class);
         PowerMockito.mockStatic(ConfigurationLoader.class);
         newsReaderFactory = mock(NewsReaderFactory.class);
@@ -42,35 +46,27 @@ public class NewsLoaderTests {
         when(config.getReaderType()).thenReturn("");
         when(configurationLoader.loadConfiguration()).thenReturn(config);
         when(newsReaderFactory.getReader(anyString())).thenReturn(reader);
-        newsLoader = new NewsLoader();
-        try {
-            field = PublishableNews.class.getDeclaredField("publicContent");
-            field.setAccessible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        field = PublishableNews.class.getDeclaredField("publicContent");
+        field.setAccessible(true);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void loadingNewsWithTwoNoneInformationsShouldStoreAllInPublicContent() {
+    public void loadingNewsWithTwoNoneInformationsShouldStoreAllInPublicContent()
+            throws IllegalArgumentException, IllegalAccessException {
         IncomingInfo info = new IncomingInfo("1", SubsciptionType.NONE);
         IncomingInfo info2 = new IncomingInfo("2", SubsciptionType.NONE);
         IncomingNews news = new IncomingNews();
         news.add(info);
         news.add(info2);
         when(reader.read()).thenReturn(news);
-        try {
-            List<String> content = (List<String>) field.get(newsLoader.loadNews());
-            assertThat(content.size(), is(2));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        @SuppressWarnings("unchecked")
+        List<String> content = (List<String>) field.get(newsLoader.loadNews());
+        assertThat(content.size(), is(2));
     }
 
-    @SuppressWarnings("unchecked")
     @Test
-    public void loadingNewsWithOneNoneAndTwoDifferentInformationsShouldStoreOneInPublicContent() {
+    public void loadingNewsWithOneNoneAndTwoDifferentInformationsShouldStoreOneInPublicContent()
+            throws IllegalArgumentException, IllegalAccessException {
         IncomingInfo info = new IncomingInfo("1", SubsciptionType.B);
         IncomingInfo info2 = new IncomingInfo("2", SubsciptionType.NONE);
         IncomingInfo info3 = new IncomingInfo("2", SubsciptionType.A);
@@ -79,11 +75,8 @@ public class NewsLoaderTests {
         news.add(info2);
         news.add(info3);
         when(reader.read()).thenReturn(news);
-        try {
-            List<String> content = (List<String>) field.get(newsLoader.loadNews());
-            assertThat(content.size(), is(1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        @SuppressWarnings("unchecked")
+        List<String> content = (List<String>) field.get(newsLoader.loadNews());
+        assertThat(content.size(), is(1));
     }
 }
