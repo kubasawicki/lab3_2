@@ -8,6 +8,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 
@@ -34,6 +35,31 @@ public class NewsLoaderTest {
         when(newsReaderFactory.getReader(null)).thenReturn(newsReaderMock);
 
         newsLoader = new NewsLoader();
+    }
+
+    @Test
+    public void SplittingSubscribersAndFreeUsers_OnlyPublicNewsShouldBeLoaded(){
+        IncomingInfo info1 = new IncomingInfo("test1", SubsciptionType.A);
+        IncomingInfo info2 = new IncomingInfo("test2", SubsciptionType.B);
+        IncomingInfo info3 = new IncomingInfo("test3", SubsciptionType.C);
+        IncomingInfo infoNone = new IncomingInfo("public info", SubsciptionType.NONE);
+
+        incomingNews.add(info1);
+        incomingNews.add(info2);
+        incomingNews.add(info3);
+        incomingNews.add(infoNone);
+
+        PublishableNews news = new PublishableNews();
+        news.addPublicInfo("public info");
+        news.addForSubscription("test1", SubsciptionType.A);
+        news.addForSubscription("test2", SubsciptionType.B);
+        news.addForSubscription("test3", SubsciptionType.C);
+
+        assertThat(news, is(newsLoader.loadNews()));
+
+
+
+
     }
 
     @Test public void loadNews() throws Exception {
