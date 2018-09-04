@@ -74,4 +74,20 @@ public class NewsLoaderTest {
         }
     }
     
+    @SuppressWarnings("unchecked")
+    @Test
+    public void onlyInformationWithoutSubscriptionShouldBeKeptInPublicContent() {
+        IncomingInfo incomingInfo = new IncomingInfo("test", SubsciptionType.A);
+        IncomingInfo incomingInfo2 = new IncomingInfo("test", SubsciptionType.NONE);
+        IncomingNews incomingNews = new IncomingNews();
+        incomingNews.add(incomingInfo);
+        incomingNews.add(incomingInfo2);
+        when(newsReader.read()).thenReturn(incomingNews);
+        try {
+            int sizeOfPublicContent = ((List<String>) field.get(newsLoader.loadNews())).size();
+            assertThat(sizeOfPublicContent, Matchers.is(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
