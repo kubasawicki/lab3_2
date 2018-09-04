@@ -3,6 +3,10 @@
   <groupId>edu.iis.mto</groupId>
   <artifactId>lab3_2</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <properties>
+ 	<powermock.version>1.7.1</powermock.version>
+ 	<mockito2.version>2.8.9</mockito2.version>
+   </properties>
   <dependencies>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
