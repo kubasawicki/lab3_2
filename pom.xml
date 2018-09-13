@@ -3,6 +3,10 @@
   <groupId>edu.iis.mto</groupId>
   <artifactId>lab3_2</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <properties>
+ 	<powermock.version>1.7.1</powermock.version>
+ 	<mockito2.version>2.8.9</mockito2.version>
+   </properties>
   <dependencies>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -25,6 +29,24 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
+		
+		<dependency>
+ 			<groupId>org.mockito</groupId>
+ 			<artifactId>mockito-all</artifactId>
+ 			<version>1.10.19</version>	
+ 		</dependency>
+ 		
+ 		<dependency>
+ 			<groupId>org.powermock</groupId>
+ 			<artifactId>powermock-module-junit4</artifactId>
+ 			<version>1.6.2</version>	
+ 		</dependency>
+ 		<dependency>
+ 			<groupId>org.powermock</groupId>
+ 			<artifactId>powermock-api-mockito</artifactId>
+ 			<version>1.6.2</version>	
+ 		</dependency>
+ 		
 		
   </dependencies>
 	<build>
